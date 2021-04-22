@@ -1,0 +1,31 @@
+server:
+  port: 10081
+spring:
+  mvc:
+    static-path-pattern: /static/**
+  datasource:
+    dynamic:
+      primary: main
+      datasource:
+        main:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/test_activiti?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+          username: root
+          password: root
+  activiti:
+    # 尼玛简直天坑 https://blog.csdn.net/jiaoshaoping/article/details/80748065
+    # false： 默认值。activiti在启动时，会对比数据库表中保存的版本，如果没有表或者版本不匹配，将抛出异常。
+    # true： activiti会对数据库中所有表进行更新操作。如果表不存在，则自动创建。
+    # create_drop： 在activiti启动时创建表，在关闭时删除表（必须手动关闭引擎，才能删除表）。
+    # drop-create： 在activiti启动时删除原来的旧表，然后在创建新表（不需要手动关闭引擎）。
+    database-schema-update: true
+    check-process-definitions: false
+    db-history-used: true
+    history-level: full
+    copy-variables-to-local-for-tasks: false
+  #    process-definition-location-suffixes: bpmn20.xml, bpmn
+  #    process-definition-location-prefix: classpath:/diagram/
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
