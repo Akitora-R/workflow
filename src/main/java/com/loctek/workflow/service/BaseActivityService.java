@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 //                      --Alice Walker
 
 @RequiredArgsConstructor
-public abstract class IActivityService<V extends IBaseExtraTaskVariables> {
-    private final HistoryService historyService;
-    private final ITaskService<V> taskService;
+public abstract class BaseActivityService<V extends IBaseExtraTaskVariables> {
+    protected final HistoryService historyService;
+    protected final BaseTaskService<V> taskService;
 
     /**
      * 按bk获取全部activity历史

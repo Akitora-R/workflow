@@ -11,7 +11,6 @@ import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
 public class ActivitiConfig implements ProcessEngineConfigurationConfigurer {
     private final ActivitiGlobalEventListener activitiGlobalEventListener;
 

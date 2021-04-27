@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseProcessInstanceInitBO<T extends IBaseExtraInstanceVariables> {
+public class ProcessInstanceInitBO<T extends IBaseExtraInstanceVariables> {
     String processDefinitionKey;
     String businessKey;
     String applier;

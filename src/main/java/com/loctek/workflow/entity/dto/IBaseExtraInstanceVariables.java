@@ -12,6 +12,4 @@ public interface IBaseExtraInstanceVariables {
     Map<String,Object> getVariables();
     @JsonIgnore
     List<String> getVariableFields();
-
-
 }

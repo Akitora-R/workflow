@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public abstract class ITaskService<V extends IBaseExtraTaskVariables> {
-    private final HistoryService historyService;
+public abstract class BaseTaskService<V extends IBaseExtraTaskVariables> {
+    protected final HistoryService historyService;
 
     /**
      * 通过task获取该task的全部局部变量
