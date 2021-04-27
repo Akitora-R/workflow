@@ -1,11 +1,8 @@
-package com.loctek.workflow.entity.dto.impl;
+package com.loctek.workflow.entity.activiti.impl;
 
-import com.loctek.workflow.entity.dto.IBaseExtraInstanceVariables;
-import lombok.Getter;
+import com.loctek.workflow.entity.activiti.IBaseExtraInstanceVariables;
 import lombok.RequiredArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @RequiredArgsConstructor

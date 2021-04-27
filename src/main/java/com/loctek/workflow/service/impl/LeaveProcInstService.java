@@ -1,6 +1,6 @@
 package com.loctek.workflow.service.impl;
 
-import com.loctek.workflow.entity.dto.impl.LeaveExtraInstanceVariables;
+import com.loctek.workflow.entity.activiti.impl.LeaveExtraInstanceVariables;
 import com.loctek.workflow.service.BaseProcessInstanceService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;

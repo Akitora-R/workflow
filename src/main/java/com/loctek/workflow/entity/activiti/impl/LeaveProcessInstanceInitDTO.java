@@ -1,6 +1,6 @@
-package com.loctek.workflow.entity.dto.impl;
+package com.loctek.workflow.entity.activiti.impl;
 
-import com.loctek.workflow.entity.dto.BaseProcessInstanceInitDTO;
+import com.loctek.workflow.entity.activiti.BaseProcessInstanceInitDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

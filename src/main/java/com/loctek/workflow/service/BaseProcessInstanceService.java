@@ -1,9 +1,9 @@
 package com.loctek.workflow.service;
 
-import com.loctek.workflow.entity.dto.BaseProcessInstanceDTO;
-import com.loctek.workflow.entity.dto.ProcessInstanceInitBO;
-import com.loctek.workflow.entity.dto.IBaseExtraInstanceVariables;
-import com.loctek.workflow.entity.dto.ProcessDefinitionDTO;
+import com.loctek.workflow.entity.activiti.BaseProcessInstanceDTO;
+import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
+import com.loctek.workflow.entity.activiti.IBaseExtraInstanceVariables;
+import com.loctek.workflow.entity.activiti.ProcessDefinitionDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiObjectNotFoundException;
@@ -15,6 +15,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,9 +80,15 @@ public abstract class BaseProcessInstanceService<V extends IBaseExtraInstanceVar
      * @return 流程实例
      */
     public BaseProcessInstanceDTO<V> startProcessInstance(ProcessInstanceInitBO<V> initDTO) {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("applierId", initDTO.getApplier());
+        V extraVariables = initDTO.getExtraVariables();
+        if (extraVariables != null && !extraVariables.getVariables().isEmpty()) {
+            param.putAll(extraVariables.getVariables());
+        }
         ProcessInstance processInstance = runtimeService
-                .startProcessInstanceByKey(initDTO.getProcessDefinitionKey(), initDTO.getBusinessKey(), initDTO.getExtraVariables().getVariables());
-        return getDTO(processInstance, initDTO.getExtraVariables());
+                .startProcessInstanceByKey(initDTO.getProcessDefinitionKey(), initDTO.getBusinessKey(), param);
+        return getDTO(processInstance, extraVariables);
     }
 
     /**
@@ -95,7 +102,7 @@ public abstract class BaseProcessInstanceService<V extends IBaseExtraInstanceVar
             runtimeService.deleteProcessInstance(procId, deleteReason);
             return true;
         } catch (ActivitiObjectNotFoundException ignore) {
-            log.warn("id: {},删除失败",procId);
+            log.warn("id: {},删除失败", procId);
         }
         return false;
     }

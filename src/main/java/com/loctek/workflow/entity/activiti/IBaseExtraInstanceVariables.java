@@ -1,4 +1,4 @@
-package com.loctek.workflow.entity.dto;
+package com.loctek.workflow.entity.activiti;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

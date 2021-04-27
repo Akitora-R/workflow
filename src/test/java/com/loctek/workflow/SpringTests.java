@@ -1,11 +1,16 @@
 package com.loctek.workflow;
 
-import com.loctek.workflow.entity.dto.ProcessInstanceInitBO;
-import com.loctek.workflow.entity.dto.impl.LeaveExtraInstanceVariables;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
+import com.loctek.workflow.entity.activiti.impl.LeaveExtraInstanceVariables;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.Deployment;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +22,15 @@ import java.util.*;
 @Slf4j
 class SpringTests {
     @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
     RepositoryService repositoryService;
     @Autowired
     RuntimeService runtimeService;
+    @Autowired
+    HistoryService historyService;
+    @Autowired
+    TaskService taskService;
     @Autowired
     LeaveProcInstService leaveProcInstService;
     @Test
@@ -72,5 +83,21 @@ class SpringTests {
                 new ProcessInstanceInitBO<>("leave", UUID.randomUUID().toString(), UUID.randomUUID().toString(), instanceVariables);
         log.info(String.valueOf(initBO));
         leaveProcInstService.startProcessInstance(initBO);
+    }
+
+    @Test
+    void getHisTaskVar() throws JsonProcessingException {
+        List<HistoricVariableInstance> list = historyService.createHistoricVariableInstanceQuery().taskId("2ca9bbfa-a6fd-11eb-bc3a-c4651636fef4").list();
+        list.forEach(l->{
+            System.out.println(l.getVariableName());
+        });
+    }
+
+    @Test
+    void completeTask(){
+        taskService.complete("b0a460cd-a735-11eb-9845-c4651636fef4",new HashMap<String,Object>(){{
+            put("approval",true);
+            put("comment","经理备注经理备注经理备注经理备注经理备注");
+        }});
     }
 }

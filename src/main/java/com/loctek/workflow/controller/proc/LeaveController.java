@@ -1,9 +1,12 @@
 package com.loctek.workflow.controller.proc;
 
 import com.loctek.workflow.entity.Resp;
-import com.loctek.workflow.entity.dto.ProcessInstanceInitBO;
-import com.loctek.workflow.entity.dto.impl.LeaveExtraInstanceVariables;
-import com.loctek.workflow.entity.dto.impl.LeaveProcessInstanceInitDTO;
+import com.loctek.workflow.entity.activiti.BaseActivityDTO;
+import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
+import com.loctek.workflow.entity.activiti.BaseTaskConclusionDTO;
+import com.loctek.workflow.entity.activiti.impl.LeaveExtraInstanceVariables;
+import com.loctek.workflow.entity.activiti.impl.LeaveExtraTaskVariables;
+import com.loctek.workflow.entity.activiti.impl.LeaveProcessInstanceInitDTO;
 import com.loctek.workflow.service.impl.LeaveActService;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
 import com.loctek.workflow.service.impl.LeaveTaskService;
@@ -24,6 +27,7 @@ public class LeaveController {
     private final LeaveProcInstService leaveProcInstService;
     private final LeaveTaskService leaveTaskService;
 
+    //FIXME: 2021/4/27 通过接口获取或者开始任务时传入
     private final static Map<String, List<String>> groupService = Collections.unmodifiableMap(new HashMap<String, List<String>>() {{
         put("SupervisorCandidateList", Arrays.asList("s1", "s2"));
         put("ManagerCandidateList", Arrays.asList("m1", "m2"));
@@ -60,5 +64,25 @@ public class LeaveController {
         return leaveProcInstService.deleteProcessInstance(id, reason) ?
                 new ResponseEntity<>(Resp.success(null, null), HttpStatus.OK) :
                 new ResponseEntity<>(Resp.fail("已删除或ID不正确", null), HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/task/complete")
+    public ResponseEntity<Resp<?>> completeTask(@RequestBody @Validated BaseTaskConclusionDTO<LeaveExtraTaskVariables> dto) {
+        return leaveTaskService.completeTask(dto) ?
+                new ResponseEntity<>(Resp.success(null, null), HttpStatus.OK) :
+                new ResponseEntity<>(Resp.fail("已完成或ID不正确", null), HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/task/bk/{businessKey}")
+    public Resp<?> getTasksByBusinessKey(@PathVariable String businessKey) {
+        return Resp.success(null, leaveTaskService.getTaskListByBusinessKey(businessKey));
+    }
+
+    @GetMapping("/act/bk/{businessKey}")
+    public ResponseEntity<Resp<?>> getActivityByBusinessKey(@PathVariable String businessKey) {
+        List<BaseActivityDTO<LeaveExtraTaskVariables>> activity = leaveActService.getActivityByBusinessKey(businessKey);
+        return !activity.isEmpty() ?
+                new ResponseEntity<>(Resp.success(null, activity), HttpStatus.OK) :
+                new ResponseEntity<>(Resp.fail("无可用数据", null), HttpStatus.NOT_FOUND);
     }
 }

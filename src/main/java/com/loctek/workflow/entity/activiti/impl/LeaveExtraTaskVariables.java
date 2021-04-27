@@ -1,6 +1,6 @@
-package com.loctek.workflow.entity.dto.impl;
+package com.loctek.workflow.entity.activiti.impl;
 
-import com.loctek.workflow.entity.dto.IBaseExtraTaskVariables;
+import com.loctek.workflow.entity.activiti.IBaseExtraTaskVariables;
 
 import java.util.Collections;
 import java.util.List;

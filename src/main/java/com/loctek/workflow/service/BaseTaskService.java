@@ -1,15 +1,19 @@
 package com.loctek.workflow.service;
 
 import cn.hutool.core.util.StrUtil;
-import com.loctek.workflow.entity.dto.BaseTaskDTO;
-import com.loctek.workflow.entity.dto.IBaseExtraTaskVariables;
+import com.loctek.workflow.entity.activiti.BaseTaskConclusionDTO;
+import com.loctek.workflow.entity.activiti.BaseTaskDTO;
+import com.loctek.workflow.entity.activiti.IBaseExtraTaskVariables;
 import lombok.RequiredArgsConstructor;
+import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public abstract class BaseTaskService<V extends IBaseExtraTaskVariables> {
     protected final HistoryService historyService;
+    protected final TaskService taskService;
 
     /**
      * 通过task获取该task的全部局部变量
@@ -34,11 +39,11 @@ public abstract class BaseTaskService<V extends IBaseExtraTaskVariables> {
     /**
      * 通过activity获取Task
      *
-     * @param activityId activityId
+     * @param activityInstanceId activityInstanceId
      * @return TaskDTO
      */
-    public BaseTaskDTO<V> getTaskByActivityId(String activityId) {
-        HistoricActivityInstance historicActivityInstance = historyService.createHistoricActivityInstanceQuery().activityId(activityId).singleResult();
+    public BaseTaskDTO<V> getTaskDTOByActivityInstanceId(String activityInstanceId) {
+        HistoricActivityInstance historicActivityInstance = historyService.createHistoricActivityInstanceQuery().activityInstanceId(activityInstanceId).singleResult();
         String taskId = historicActivityInstance.getTaskId();
         if (StrUtil.isBlankOrUndefined(taskId)) {
             return null;
@@ -61,6 +66,22 @@ public abstract class BaseTaskService<V extends IBaseExtraTaskVariables> {
     public List<BaseTaskDTO<V>> getTaskListByUser(String user) {
         List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery().taskAssigneeLikeIgnoreCase(user).list();
         return getDTOListByInstanceList(historicTaskInstances);
+    }
+
+    public boolean completeTask(BaseTaskConclusionDTO<V> dto) {
+        try {
+            taskService.claim(dto.getTaskId(), dto.getUserId());
+            HashMap<String, Object> param = new HashMap<>();
+            param.put("approval", dto.getApproval());
+            param.put("comment", dto.getComment());
+            if (dto.getExtraVariables() != null && !dto.getExtraVariables().getVariables().isEmpty()) {
+                param.putAll(dto.getExtraVariables().getVariables());
+            }
+            taskService.complete(dto.getTaskId(), param, true);
+            return true;
+        } catch (ActivitiObjectNotFoundException ignored) {
+            return false;
+        }
     }
 
     protected BaseTaskDTO<V> getDTO(HistoricTaskInstance historicTaskInstance, Boolean approval, String comment) {
