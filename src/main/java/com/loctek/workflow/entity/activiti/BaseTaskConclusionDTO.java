@@ -6,13 +6,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class BaseTaskConclusionDTO<V extends IBaseExtraTaskVariables> {
+public class BaseTaskConclusionDTO<V extends BaseTaskVariable> {
     @NotBlank
     protected String taskId;
-    @NotNull
-    protected Boolean approval;
     @NotBlank
     protected String userId;
-    protected String comment;
-    protected V extraVariables;
+    protected V variable;
 }

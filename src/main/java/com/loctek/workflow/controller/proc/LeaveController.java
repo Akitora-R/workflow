@@ -4,8 +4,8 @@ import com.loctek.workflow.entity.Resp;
 import com.loctek.workflow.entity.activiti.BaseActivityDTO;
 import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
 import com.loctek.workflow.entity.activiti.BaseTaskConclusionDTO;
-import com.loctek.workflow.entity.activiti.impl.LeaveExtraInstanceVariables;
-import com.loctek.workflow.entity.activiti.impl.LeaveExtraTaskVariables;
+import com.loctek.workflow.entity.activiti.impl.LeaveInstanceVariable;
+import com.loctek.workflow.entity.activiti.impl.LeaveTaskVariable;
 import com.loctek.workflow.entity.activiti.impl.LeaveProcessInstanceInitDTO;
 import com.loctek.workflow.service.impl.LeaveActService;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
@@ -41,16 +41,17 @@ public class LeaveController {
 
     @PostMapping("/proc/start")
     public Resp<?> startProcInsByBusinessKey(@RequestBody @Validated LeaveProcessInstanceInitDTO dto) {
-        LeaveExtraInstanceVariables instanceVariables =
-                new LeaveExtraInstanceVariables(
+        LeaveInstanceVariable instanceVariables =
+                new LeaveInstanceVariable(
+                        dto.getApplierId(),
                         dto.getApplierGroup(),
                         dto.getApplierLevel(),
                         dto.getDays(),
                         groupService.get("SupervisorCandidateList"),
                         groupService.get("ManagerCandidateList"),
                         groupService.get("DirectorCandidateList"));
-        ProcessInstanceInitBO<LeaveExtraInstanceVariables> initBO =
-                new ProcessInstanceInitBO<>(leaveProcInstService.getDefinitionKey(), dto.getBusinessKey(), dto.getApplierId(), instanceVariables);
+        ProcessInstanceInitBO<LeaveInstanceVariable> initBO =
+                new ProcessInstanceInitBO<>(leaveProcInstService.getDefinitionKey(), dto.getBusinessKey(), instanceVariables);
         return Resp.success(null, leaveProcInstService.startProcessInstance(initBO));
     }
 
@@ -67,7 +68,7 @@ public class LeaveController {
     }
 
     @PutMapping("/task/complete")
-    public ResponseEntity<Resp<?>> completeTask(@RequestBody @Validated BaseTaskConclusionDTO<LeaveExtraTaskVariables> dto) {
+    public ResponseEntity<Resp<?>> completeTask(@RequestBody @Validated BaseTaskConclusionDTO<LeaveTaskVariable> dto) {
         return leaveTaskService.completeTask(dto) ?
                 new ResponseEntity<>(Resp.success(null, null), HttpStatus.OK) :
                 new ResponseEntity<>(Resp.fail("已完成或ID不正确", null), HttpStatus.NOT_FOUND);
@@ -80,7 +81,7 @@ public class LeaveController {
 
     @GetMapping("/act/bk/{businessKey}")
     public ResponseEntity<Resp<?>> getActivityByBusinessKey(@PathVariable String businessKey) {
-        List<BaseActivityDTO<LeaveExtraTaskVariables>> activity = leaveActService.getActivityByBusinessKey(businessKey);
+        List<BaseActivityDTO<LeaveTaskVariable>> activity = leaveActService.getActivityByBusinessKey(businessKey);
         return !activity.isEmpty() ?
                 new ResponseEntity<>(Resp.success(null, activity), HttpStatus.OK) :
                 new ResponseEntity<>(Resp.fail("无可用数据", null), HttpStatus.NOT_FOUND);

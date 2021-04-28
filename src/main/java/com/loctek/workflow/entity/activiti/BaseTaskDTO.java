@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseTaskDTO<T extends IBaseExtraTaskVariables> {
+public class BaseTaskDTO<T extends BaseTaskVariable> {
     String id;
     String name;
     String assignee;
@@ -18,5 +18,5 @@ public class BaseTaskDTO<T extends IBaseExtraTaskVariables> {
     Boolean finished;
     Boolean approval;
     String comment;
-    T extraVariables;
+    T variable;
 }

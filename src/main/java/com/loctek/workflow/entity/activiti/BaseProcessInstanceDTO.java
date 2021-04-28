@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseProcessInstanceDTO<T extends IBaseExtraInstanceVariables> {
+public class BaseProcessInstanceDTO<V extends BaseInstanceVariable> {
     String id;
     String name;
     String definitionKey;
@@ -17,5 +17,5 @@ public class BaseProcessInstanceDTO<T extends IBaseExtraInstanceVariables> {
     String businessKey;
     LocalDateTime startTime;
     LocalDateTime endTime;
-    T extraVariables;
+    V variable;
 }

@@ -3,7 +3,7 @@ package com.loctek.workflow.service;
 import cn.hutool.core.util.StrUtil;
 import com.loctek.workflow.entity.activiti.BaseTaskConclusionDTO;
 import com.loctek.workflow.entity.activiti.BaseTaskDTO;
-import com.loctek.workflow.entity.activiti.IBaseExtraTaskVariables;
+import com.loctek.workflow.entity.activiti.BaseTaskVariable;
 import lombok.RequiredArgsConstructor;
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.HistoryService;
@@ -11,6 +11,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public abstract class BaseTaskService<V extends IBaseExtraTaskVariables> {
+public abstract class BaseTaskService<V extends BaseTaskVariable> {
     protected final HistoryService historyService;
     protected final TaskService taskService;
 
@@ -68,16 +69,11 @@ public abstract class BaseTaskService<V extends IBaseExtraTaskVariables> {
         return getDTOListByInstanceList(historicTaskInstances);
     }
 
+    @Transactional
     public boolean completeTask(BaseTaskConclusionDTO<V> dto) {
         try {
             taskService.claim(dto.getTaskId(), dto.getUserId());
-            HashMap<String, Object> param = new HashMap<>();
-            param.put("approval", dto.getApproval());
-            param.put("comment", dto.getComment());
-            if (dto.getExtraVariables() != null && !dto.getExtraVariables().getVariables().isEmpty()) {
-                param.putAll(dto.getExtraVariables().getVariables());
-            }
-            taskService.complete(dto.getTaskId(), param, true);
+            taskService.complete(dto.getTaskId(), dto.getVariable().toMap(), true);
             return true;
         } catch (ActivitiObjectNotFoundException ignored) {
             return false;

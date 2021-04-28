@@ -3,7 +3,7 @@ package com.loctek.workflow;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
-import com.loctek.workflow.entity.activiti.impl.LeaveExtraInstanceVariables;
+import com.loctek.workflow.entity.activiti.impl.LeaveInstanceVariable;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.HistoryService;
@@ -42,8 +42,6 @@ class SpringTests {
         Deployment deploy = repositoryService.createDeployment()
                 .addClasspathResource("processes/leave.bpmn")
                 .addClasspathResource("processes/leave.png")
-                .key("leave")
-                .name("请假")
                 .deploy();
         log.info("id:{},name:{},key:{}",deploy.getId(),deploy.getName(),deploy.getKey());
     }
@@ -71,26 +69,25 @@ class SpringTests {
 
     @Test
     void startProc(){
-        LeaveExtraInstanceVariables instanceVariables =
-                new LeaveExtraInstanceVariables(
+        LeaveInstanceVariable instanceVariables =
+                new LeaveInstanceVariable(
+                        UUID.randomUUID().toString(),
                         "技术",
                         5,
                         0.5,
                         groupService.get("SupervisorCandidateList"),
                         groupService.get("ManagerCandidateList"),
                         groupService.get("DirectorCandidateList"));
-        ProcessInstanceInitBO<LeaveExtraInstanceVariables> initBO =
-                new ProcessInstanceInitBO<>("leave", UUID.randomUUID().toString(), UUID.randomUUID().toString(), instanceVariables);
+        ProcessInstanceInitBO<LeaveInstanceVariable> initBO =
+                new ProcessInstanceInitBO<>("leave", UUID.randomUUID().toString(), instanceVariables);
         log.info(String.valueOf(initBO));
         leaveProcInstService.startProcessInstance(initBO);
     }
 
     @Test
     void getHisTaskVar() throws JsonProcessingException {
-        List<HistoricVariableInstance> list = historyService.createHistoricVariableInstanceQuery().taskId("2ca9bbfa-a6fd-11eb-bc3a-c4651636fef4").list();
-        list.forEach(l->{
-            System.out.println(l.getVariableName());
-        });
+        List<HistoricVariableInstance> historicVariableInstanceList = historyService.createHistoricVariableInstanceQuery().processInstanceId("1e38d198-a7c8-11eb-b8d0-c4651636fef4").list();
+
     }
 
     @Test

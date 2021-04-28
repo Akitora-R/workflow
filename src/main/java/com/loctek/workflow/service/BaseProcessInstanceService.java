@@ -1,9 +1,6 @@
 package com.loctek.workflow.service;
 
-import com.loctek.workflow.entity.activiti.BaseProcessInstanceDTO;
-import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
-import com.loctek.workflow.entity.activiti.IBaseExtraInstanceVariables;
-import com.loctek.workflow.entity.activiti.ProcessDefinitionDTO;
+import com.loctek.workflow.entity.activiti.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiObjectNotFoundException;
@@ -22,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
-public abstract class BaseProcessInstanceService<V extends IBaseExtraInstanceVariables> {
+public abstract class BaseProcessInstanceService<V extends BaseInstanceVariable> {
     protected final RuntimeService runtimeService;
     protected final HistoryService historyService;
     protected final RepositoryService repositoryService;
@@ -80,15 +77,10 @@ public abstract class BaseProcessInstanceService<V extends IBaseExtraInstanceVar
      * @return 流程实例
      */
     public BaseProcessInstanceDTO<V> startProcessInstance(ProcessInstanceInitBO<V> initDTO) {
-        HashMap<String, Object> param = new HashMap<>();
-        param.put("applierId", initDTO.getApplier());
-        V extraVariables = initDTO.getExtraVariables();
-        if (extraVariables != null && !extraVariables.getVariables().isEmpty()) {
-            param.putAll(extraVariables.getVariables());
-        }
+        V variables = initDTO.getVariables();
         ProcessInstance processInstance = runtimeService
-                .startProcessInstanceByKey(initDTO.getProcessDefinitionKey(), initDTO.getBusinessKey(), param);
-        return getDTO(processInstance, extraVariables);
+                .startProcessInstanceByKey(initDTO.getProcessDefinitionKey(), initDTO.getBusinessKey(), variables.toMap());
+        return getDTO(processInstance, variables);
     }
 
     /**
@@ -115,7 +107,7 @@ public abstract class BaseProcessInstanceService<V extends IBaseExtraInstanceVar
         dto.setDefinitionName(processInstance.getProcessDefinitionName());
         dto.setBusinessKey(processInstance.getBusinessKey());
         dto.setStartTime(processInstance.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-        dto.setExtraVariables(variables);
+        dto.setVariable(variables);
         return dto;
     }
 

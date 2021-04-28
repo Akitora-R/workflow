@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import com.loctek.workflow.entity.activiti.BaseActivityDTO;
 import com.loctek.workflow.entity.activiti.BaseTaskDTO;
-import com.loctek.workflow.entity.activiti.IBaseExtraTaskVariables;
+import com.loctek.workflow.entity.activiti.BaseTaskVariable;
 import lombok.RequiredArgsConstructor;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.history.HistoricActivityInstance;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 //                      --Alice Walker
 
 @RequiredArgsConstructor
-public abstract class BaseActivityService<V extends IBaseExtraTaskVariables> {
+public abstract class BaseActivityService<V extends BaseTaskVariable> {
     protected final HistoryService historyService;
     protected final BaseTaskService<V> taskService;
 
