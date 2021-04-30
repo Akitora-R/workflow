@@ -1,3 +1,5 @@
+// "All History is current."
+//                      --Alice Walker
 package com.loctek.workflow.service;
 
 import cn.hutool.core.date.DateUtil;
@@ -13,9 +15,6 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// "All History is current."
-//                      --Alice Walker
-
 @RequiredArgsConstructor
 public abstract class BaseActivityService<V extends BaseTaskVariable> {
     protected final HistoryService historyService;
@@ -27,7 +26,7 @@ public abstract class BaseActivityService<V extends BaseTaskVariable> {
      * @param businessKey bk
      * @return 全部activity历史
      */
-    public List<BaseActivityDTO<V>> getActivityByBusinessKey(String businessKey){
+    public List<BaseActivityDTO<V>> getActivityByBusinessKey(String businessKey) {
         HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(businessKey).singleResult();
         Assert.notNull(historicProcessInstance);
         List<HistoricActivityInstance> list = historyService.createHistoricActivityInstanceQuery().processInstanceId(historicProcessInstance.getId())

@@ -27,7 +27,9 @@ public class LeaveProcInstService extends BaseProcessInstanceService<LeaveInstan
                 (Double) variables.get("days"),
                 (List<String>) variables.get("SupervisorCandidateList"),
                 (List<String>) variables.get("ManagerCandidateList"),
-                (List<String>) variables.get("DirectorCandidateList")
+                (List<String>) variables.get("DirectorCandidateList"),
+                (List<String>) variables.get("VicePresidentCandidateList"),
+                (List<String>) variables.get("PresidentCandidateList")
         );
     }
 

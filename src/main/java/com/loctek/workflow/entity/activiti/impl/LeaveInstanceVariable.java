@@ -12,8 +12,10 @@ public class LeaveInstanceVariable extends BaseInstanceVariable {
             "销售", "市场", "产品研发", "技术", "生产供应链");
     private final static List<String> group2 = Arrays.asList(
             "战略运营", "人力资源", "财务", "风控", "综合");
-    private final static List<String> group3 = Collections.singletonList("操作");
-    private final static List<String> group4 = Collections.singletonList("管理");
+    private final static List<String> group3 = Collections.singletonList(
+            "操作");
+    private final static List<String> group4 = Collections.singletonList(
+            "管理");
 
     private String applierGroup;
     private Integer applierLevel;
@@ -21,15 +23,27 @@ public class LeaveInstanceVariable extends BaseInstanceVariable {
     private List<String> SupervisorCandidateList;
     private List<String> ManagerCandidateList;
     private List<String> DirectorCandidateList;
+    private List<String> VicePresidentCandidateList;
+    private List<String> PresidentCandidateList;
 
-    public LeaveInstanceVariable(String applierId, String applierGroup, Integer applierLevel, Double days, List<String> supervisorCandidateList, List<String> managerCandidateList, List<String> directorCandidateList) {
+    public LeaveInstanceVariable(String applierId,
+                                 String applierGroup,
+                                 Integer applierLevel,
+                                 Double days,
+                                 List<String> SupervisorCandidateList,
+                                 List<String> ManagerCandidateList,
+                                 List<String> DirectorCandidateList,
+                                 List<String> VicePresidentCandidateList,
+                                 List<String> PresidentCandidateList) {
         super(applierId);
         this.applierGroup = applierGroup;
         this.applierLevel = applierLevel;
         this.days = days;
-        SupervisorCandidateList = supervisorCandidateList;
-        ManagerCandidateList = managerCandidateList;
-        DirectorCandidateList = directorCandidateList;
+        this.SupervisorCandidateList = SupervisorCandidateList;
+        this.ManagerCandidateList = ManagerCandidateList;
+        this.DirectorCandidateList = DirectorCandidateList;
+        this.VicePresidentCandidateList = VicePresidentCandidateList;
+        this.PresidentCandidateList = PresidentCandidateList;
     }
 
     @Override
@@ -46,6 +60,8 @@ public class LeaveInstanceVariable extends BaseInstanceVariable {
             put("SupervisorCandidateList", SupervisorCandidateList);
             put("ManagerCandidateList", ManagerCandidateList);
             put("DirectorCandidateList", DirectorCandidateList);
+            put("VicePresidentCandidateList", VicePresidentCandidateList);
+            put("PresidentCandidateList", PresidentCandidateList);
         }};
     }
 }

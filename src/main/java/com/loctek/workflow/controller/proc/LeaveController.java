@@ -1,12 +1,11 @@
 package com.loctek.workflow.controller.proc;
 
+import com.loctek.workflow.constant.AuditStatus;
 import com.loctek.workflow.entity.Resp;
-import com.loctek.workflow.entity.activiti.BaseActivityDTO;
-import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
-import com.loctek.workflow.entity.activiti.BaseTaskConclusionDTO;
+import com.loctek.workflow.entity.activiti.*;
 import com.loctek.workflow.entity.activiti.impl.LeaveInstanceVariable;
-import com.loctek.workflow.entity.activiti.impl.LeaveTaskVariable;
 import com.loctek.workflow.entity.activiti.impl.LeaveProcessInstanceInitDTO;
+import com.loctek.workflow.entity.activiti.impl.LeaveTaskVariable;
 import com.loctek.workflow.service.impl.LeaveActService;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
 import com.loctek.workflow.service.impl.LeaveTaskService;
@@ -17,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +32,8 @@ public class LeaveController {
         put("SupervisorCandidateList", Arrays.asList("s1", "s2"));
         put("ManagerCandidateList", Arrays.asList("m1", "m2"));
         put("DirectorCandidateList", Arrays.asList("d1", "d2"));
+        put("VicePresidentCandidateList", Arrays.asList("v1", "v2"));
+        put("PresidentCandidateList", Arrays.asList("p1", "p2"));
     }});
 
     @GetMapping("/proc/def")
@@ -49,7 +51,9 @@ public class LeaveController {
                         dto.getDays(),
                         groupService.get("SupervisorCandidateList"),
                         groupService.get("ManagerCandidateList"),
-                        groupService.get("DirectorCandidateList"));
+                        groupService.get("DirectorCandidateList"),
+                        groupService.get("VicePresidentCandidateList"),
+                        groupService.get("PresidentCandidateList"));
         ProcessInstanceInitBO<LeaveInstanceVariable> initBO =
                 new ProcessInstanceInitBO<>(leaveProcInstService.getDefinitionKey(), dto.getBusinessKey(), instanceVariables);
         return Resp.success(null, leaveProcInstService.startProcessInstance(initBO));
@@ -77,6 +81,25 @@ public class LeaveController {
     @GetMapping("/task/bk/{businessKey}")
     public Resp<?> getTasksByBusinessKey(@PathVariable String businessKey) {
         return Resp.success(null, leaveTaskService.getTaskListByBusinessKey(businessKey));
+    }
+
+    @GetMapping("/task/user/{userId}")
+    public Resp<?> getTasksByUserId(@PathVariable String userId, @RequestParam(required = false) Boolean isFinished) {
+        return Resp.success(null, leaveTaskService.getTaskListByUser(userId, isFinished));
+    }
+
+    @PostMapping("/task/bk")
+    public Resp<?> getAuditStateByBusinessKey(@RequestBody List<String> businessKeyList) {
+        Map<String, AuditStatusDTO> map = businessKeyList.stream().map(bk -> {
+            BaseTaskDTO<LeaveTaskVariable> lastTask = leaveTaskService.getLastTaskByBusinessKey(bk);
+            boolean notSubmitted = lastTask == null;
+            AuditStatus status =
+                    notSubmitted ? AuditStatus.notSubmitted :
+                            !lastTask.getFinished() ? AuditStatus.pending :
+                                    lastTask.getApproval() ? AuditStatus.accepted : AuditStatus.rejected;
+            return new AuditStatusDTO(bk, notSubmitted ? null : lastTask.getId(), status, "");
+        }).collect(Collectors.toMap(AuditStatusDTO::getBusinessKey, dto -> dto));
+        return Resp.success(null, map);
     }
 
     @GetMapping("/act/bk/{businessKey}")

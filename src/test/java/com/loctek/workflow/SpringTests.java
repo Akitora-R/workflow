@@ -77,7 +77,7 @@ class SpringTests {
                         0.5,
                         groupService.get("SupervisorCandidateList"),
                         groupService.get("ManagerCandidateList"),
-                        groupService.get("DirectorCandidateList"));
+                        groupService.get("DirectorCandidateList"),null,null);
         ProcessInstanceInitBO<LeaveInstanceVariable> initBO =
                 new ProcessInstanceInitBO<>("leave", UUID.randomUUID().toString(), instanceVariables);
         log.info(String.valueOf(initBO));
@@ -96,5 +96,10 @@ class SpringTests {
             put("approval",true);
             put("comment","经理备注经理备注经理备注经理备注经理备注");
         }});
+    }
+    @Test
+    void getIdentityLink(){
+        String taskId="001749f2-a89d-11eb-8a85-c4651636fef4";
+        historyService.getHistoricIdentityLinksForTask(taskId);
     }
 }
