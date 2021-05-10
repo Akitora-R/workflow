@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class BaseTaskConclusionDTO<V extends BaseTaskVariable> {
-    @NotBlank
     protected String taskId;
     @NotBlank
     protected String userId;

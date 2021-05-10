@@ -12,8 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 public class BaseTaskDTO<T extends BaseTaskVariable> {
     String id;
+    String businessKey;
     String name;
     String assignee;
+    String applierId;
     List<String> candidateList;
     LocalDateTime createTime;
     LocalDateTime endTime;

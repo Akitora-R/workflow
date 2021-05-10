@@ -10,6 +10,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.Deployment;
 import org.junit.jupiter.api.Test;
@@ -72,6 +73,7 @@ class SpringTests {
         LeaveInstanceVariable instanceVariables =
                 new LeaveInstanceVariable(
                         UUID.randomUUID().toString(),
+                        UUID.randomUUID().toString(),
                         "技术",
                         5,
                         0.5,
@@ -101,5 +103,11 @@ class SpringTests {
     void getIdentityLink(){
         String taskId="001749f2-a89d-11eb-8a85-c4651636fef4";
         historyService.getHistoricIdentityLinksForTask(taskId);
+    }
+
+    @Test
+    void getTaskBuExecId(){
+        String execId="66d332fb-b0d2-11eb-9eff-c4651636fef4";
+
     }
 }

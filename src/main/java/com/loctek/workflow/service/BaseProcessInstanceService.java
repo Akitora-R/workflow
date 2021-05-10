@@ -1,6 +1,7 @@
 package com.loctek.workflow.service;
 
 import com.loctek.workflow.entity.activiti.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiObjectNotFoundException;
@@ -68,7 +69,7 @@ public abstract class BaseProcessInstanceService<V extends BaseInstanceVariable>
     public BaseProcessInstanceDTO<V> getProcessInstanceByBusinessKey(String businessKey) {
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
                 .processDefinitionKey(getDefinitionKey()).processInstanceBusinessKey(businessKey).active().singleResult();
-        return getDTO(processInstance, convertInstanceVariable(getVariablesByInstanceId(processInstance.getProcessInstanceId())));
+        return processInstance == null ? null : getDTO(processInstance, convertInstanceVariable(getVariablesByInstanceId(processInstance.getProcessInstanceId())));
     }
 
     /**

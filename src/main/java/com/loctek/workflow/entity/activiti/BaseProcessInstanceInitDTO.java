@@ -14,4 +14,6 @@ public class BaseProcessInstanceInitDTO{
     String businessKey;
     @NotBlank
     String applierId;
+    @NotBlank
+    String applierDepartmentId;
 }

@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ValidationException;
+
 @RestControllerAdvice
 public class RestExceptionHandler {
-    @ExceptionHandler({BindingException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler({BindingException.class, MethodArgumentNotValidException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected Resp<?> bindingExHandler(Exception e) {
         e.printStackTrace();

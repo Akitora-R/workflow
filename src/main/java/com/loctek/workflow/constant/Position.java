@@ -1,11 +1,11 @@
 package com.loctek.workflow.constant;
 
 public enum Position {
-    Supervisor("主管"),
-    Manager("经理"),
-    Director("总监"),
-    VicePresident("副总裁"),
-    President("总裁"),
+    supervisor("主管"),
+    manager("经理"),
+    director("总监"),
+    vicePresident("副总裁"),
+    president("总裁"),
     ;
 
     private final String desc;

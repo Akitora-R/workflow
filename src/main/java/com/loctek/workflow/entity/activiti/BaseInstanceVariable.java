@@ -14,6 +14,7 @@ import java.util.Map;
 @NoArgsConstructor
 public abstract class BaseInstanceVariable {
     public String applierId;
+    public String applierDepartmentId;
 
     public abstract Map<String, Object> toMap();
 }

@@ -1,9 +1,9 @@
 package com.loctek.workflow.service;
 
 import cn.hutool.core.util.StrUtil;
-import com.loctek.workflow.entity.activiti.BaseTaskConclusionDTO;
-import com.loctek.workflow.entity.activiti.BaseTaskDTO;
-import com.loctek.workflow.entity.activiti.BaseTaskVariable;
+import com.loctek.workflow.constant.AuditStatus;
+import com.loctek.workflow.entity.activiti.*;
+import com.loctek.workflow.entity.activiti.impl.LeaveTaskVariable;
 import lombok.RequiredArgsConstructor;
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.HistoryService;
@@ -11,6 +11,8 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.*;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
+import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
@@ -58,7 +60,8 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
         HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
         Map<String, Object> variables = this.getVariablesByTaskId(taskId);
         List<String> candidateList = getCandidateListByTaskId(historicTaskInstance.getId());
-        return getDTO(historicTaskInstance, (Boolean) variables.get("approval"), (String) variables.get("comment"), candidateList);
+        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(historicActivityInstance.getProcessInstanceId()).singleResult();
+        return getDTO(historicTaskInstance, historicProcessInstance.getBusinessKey(), (String) variables.get("applierId"), (Boolean) variables.get("approval"), (String) variables.get("comment"), candidateList);
     }
 
     public List<BaseTaskDTO<V>> getTaskListByBusinessKey(String businessKey) {
@@ -101,11 +104,63 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
         }
     }
 
-    protected BaseTaskDTO<V> getDTO(HistoricTaskInstance historicTaskInstance, Boolean approval, String comment, List<String> candidateList) {
+    public boolean completeTaskByName(BaseTaskConclusionDTO<V> dto, String name, String businessKey) {
+        Task task = taskService.createTaskQuery()
+                .taskName(name)
+                .processInstanceBusinessKey(businessKey)
+                .singleResult();
+        if (task == null) {
+            return false;
+        }
+        dto.setTaskId(task.getId());
+        return completeTask(dto);
+    }
+
+    public Map<String, AuditStatusDTO> getAuditStatusByBusinessKeyList(List<String> businessKeyList) {
+        return businessKeyList.stream().map(bk -> {
+            BaseTaskDTO<V> lastTask = getLastTaskByBusinessKey(bk);
+            boolean notSubmitted = lastTask == null;
+            AuditStatus status =
+                    notSubmitted ? AuditStatus.notSubmitted :
+                            !lastTask.getFinished() ? AuditStatus.pending :
+                                    lastTask.getApproval() ? AuditStatus.accepted : AuditStatus.rejected;
+            return new AuditStatusDTO(bk, notSubmitted ? null : lastTask.getId(), status, getAuditDescription(status, lastTask));
+        }).collect(Collectors.toMap(AuditStatusDTO::getBusinessKey, dto -> dto));
+    }
+
+    public List<String> getTaskIdList(String businessKey, String taskName) {
+        return historyService.createHistoricTaskInstanceQuery()
+                .taskNameLike(taskName)
+                .processInstanceBusinessKey(businessKey).list().stream().map(TaskInfo::getId).collect(Collectors.toList());
+    }
+
+    protected String getAuditDescription(AuditStatus auditStatus, BaseTaskDTO<V> baseTaskDTO) {
+        switch (auditStatus) {
+            case notSubmitted:
+                return "未提交";
+            case pending:
+                return StrUtil.format("{}中, 审核人[{}]", baseTaskDTO.getName(), String.join(",", baseTaskDTO.getCandidateList()));
+            case accepted:
+                return "结束";
+            case rejected:
+                return StrUtil.format("{}不通过, 审核人[{}]", baseTaskDTO.getName(), baseTaskDTO.getAssignee());
+            default:
+                return null;
+        }
+    }
+
+    protected BaseTaskDTO<V> getDTO(HistoricTaskInstance historicTaskInstance,
+                                    String businessKey,
+                                    String applierId,
+                                    Boolean approval,
+                                    String comment,
+                                    List<String> candidateList) {
         BaseTaskDTO<V> dto = new BaseTaskDTO<>();
         dto.setId(historicTaskInstance.getId());
+        dto.setBusinessKey(businessKey);
         dto.setName(historicTaskInstance.getName());
         dto.setAssignee(historicTaskInstance.getAssignee());
+        dto.setApplierId(applierId);
         dto.setCreateTime(historicTaskInstance.getCreateTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         dto.setCandidateList(candidateList);
         boolean finished = historicTaskInstance.getEndTime() != null;
@@ -119,10 +174,16 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
     }
 
     protected List<BaseTaskDTO<V>> getDTOListByInstanceList(List<HistoricTaskInstance> historicTaskInstances) {
-        return historicTaskInstances.stream().map(h -> {
-            Map<String, Object> variables = getVariablesByTaskId(h.getId());
-            List<String> candidateList = getCandidateListByTaskId(h.getId());
-            return getDTO(h, (Boolean) variables.get("approval"), (String) variables.get("comment"), candidateList);
+        return historicTaskInstances.stream().map(ht -> {
+            Map<String, Object> variables = getVariablesByTaskId(ht.getId());
+            List<String> candidateList = getCandidateListByTaskId(ht.getId());
+            HistoricProcessInstance hp = historyService.createHistoricProcessInstanceQuery().processInstanceId(ht.getProcessInstanceId()).singleResult();
+            return getDTO(ht,
+                    hp.getBusinessKey(),
+                    (String) variables.get("applierId"),
+                    (Boolean) variables.get("approval"),
+                    (String) variables.get("comment"),
+                    candidateList);
         }).collect(Collectors.toList());
     }
 }

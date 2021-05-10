@@ -27,6 +27,7 @@ public class LeaveInstanceVariable extends BaseInstanceVariable {
     private List<String> PresidentCandidateList;
 
     public LeaveInstanceVariable(String applierId,
+                                 String applierDepartmentId,
                                  String applierGroup,
                                  Integer applierLevel,
                                  Double days,
@@ -35,7 +36,7 @@ public class LeaveInstanceVariable extends BaseInstanceVariable {
                                  List<String> DirectorCandidateList,
                                  List<String> VicePresidentCandidateList,
                                  List<String> PresidentCandidateList) {
-        super(applierId);
+        super(applierId,applierDepartmentId);
         this.applierGroup = applierGroup;
         this.applierLevel = applierLevel;
         this.days = days;
@@ -50,6 +51,7 @@ public class LeaveInstanceVariable extends BaseInstanceVariable {
     public Map<String, Object> toMap() {
         return new HashMap<String, Object>() {{
             put("applierId", LeaveInstanceVariable.super.applierId);
+            put("applierDepartmentId", LeaveInstanceVariable.super.applierDepartmentId);
             put("applierGroup", applierGroup);
             put("applierLevel", applierLevel);
             put("days", days);
