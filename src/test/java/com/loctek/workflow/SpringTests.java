@@ -2,6 +2,7 @@ package com.loctek.workflow;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.loctek.workflow.entity.activiti.BaseProcessInstanceDTO;
 import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
 import com.loctek.workflow.entity.activiti.impl.LeaveInstanceVariable;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
@@ -10,6 +11,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.Deployment;
@@ -63,9 +65,9 @@ class SpringTests {
     }
 
     private final static Map<String, List<String>> groupService = Collections.unmodifiableMap(new HashMap<String, List<String>>() {{
-        put("SupervisorCandidateList", Arrays.asList("s1", "s2"));
-        put("ManagerCandidateList", Arrays.asList("m1", "m2"));
-        put("DirectorCandidateList", Arrays.asList("d1", "d2"));
+        put("supervisorCandidateList", Arrays.asList("s1", "s2"));
+        put("managerCandidateList", Arrays.asList("m1", "m2"));
+        put("directorCandidateList", Arrays.asList("d1", "d2"));
     }});
 
     @Test
@@ -77,9 +79,9 @@ class SpringTests {
                         "技术",
                         5,
                         0.5,
-                        groupService.get("SupervisorCandidateList"),
-                        groupService.get("ManagerCandidateList"),
-                        groupService.get("DirectorCandidateList"),null,null);
+                        groupService.get("supervisorCandidateList"),
+                        groupService.get("managerCandidateList"),
+                        groupService.get("directorCandidateList"),null,null);
         ProcessInstanceInitBO<LeaveInstanceVariable> initBO =
                 new ProcessInstanceInitBO<>("leave", UUID.randomUUID().toString(), instanceVariables);
         log.info(String.valueOf(initBO));
@@ -106,8 +108,17 @@ class SpringTests {
     }
 
     @Test
-    void getTaskBuExecId(){
-        String execId="66d332fb-b0d2-11eb-9eff-c4651636fef4";
+    void getHistoricProcInstDTO(){
+        String id="f171c2a1-b170-11eb-9a94-c4651636fef4";
+        BaseProcessInstanceDTO<LeaveInstanceVariable> dto = leaveProcInstService.getHistoricProcessInstanceByInstanceId(id);
+        printJson(dto);
+    }
 
+    private void printJson(Object o){
+        try {
+            System.out.println(objectMapper.writeValueAsString(o));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }

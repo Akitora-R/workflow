@@ -28,11 +28,11 @@ public class LeaveController {
 
     //FIXME: 2021/4/27 通过接口获取或者开始任务时传入
     private final static Map<String, List<String>> groupService = Collections.unmodifiableMap(new HashMap<String, List<String>>() {{
-        put("SupervisorCandidateList", Arrays.asList("s1", "10110"));
-        put("ManagerCandidateList", Arrays.asList("m1", "10110"));
-        put("DirectorCandidateList", Arrays.asList("d1", "10110"));
-        put("VicePresidentCandidateList", Arrays.asList("v1", "10110"));
-        put("PresidentCandidateList", Arrays.asList("p1", "10110"));
+        put("supervisorCandidateList", Arrays.asList("s1", "10110"));
+        put("managerCandidateList", Arrays.asList("m1", "10110"));
+        put("directorCandidateList", Arrays.asList("d1", "10110"));
+        put("vicePresidentCandidateList", Arrays.asList("v1", "10110"));
+        put("presidentCandidateList", Arrays.asList("p1", "10110"));
     }});
 
     @GetMapping("/proc/def")
@@ -41,7 +41,7 @@ public class LeaveController {
     }
 
     @PostMapping("/proc/start")
-    public Resp<?> startProcInsByBusinessKey(@RequestBody @Validated LeaveProcessInstanceInitDTO dto) {
+    public Resp<BaseProcessInstanceDTO<LeaveInstanceVariable>> startProcInsByBusinessKey(@RequestBody @Validated LeaveProcessInstanceInitDTO dto) {
         LeaveInstanceVariable instanceVariables =
                 new LeaveInstanceVariable(
                         dto.getApplierId(),
@@ -49,11 +49,11 @@ public class LeaveController {
                         dto.getApplierGroup(),
                         dto.getApplierLevel(),
                         dto.getDays(),
-                        groupService.get("SupervisorCandidateList"),
-                        groupService.get("ManagerCandidateList"),
-                        groupService.get("DirectorCandidateList"),
-                        groupService.get("VicePresidentCandidateList"),
-                        groupService.get("PresidentCandidateList"));
+                        groupService.get("supervisorCandidateList"),
+                        groupService.get("managerCandidateList"),
+                        groupService.get("directorCandidateList"),
+                        groupService.get("vicePresidentCandidateList"),
+                        groupService.get("presidentCandidateList"));
         ProcessInstanceInitBO<LeaveInstanceVariable> initBO =
                 new ProcessInstanceInitBO<>(leaveProcInstService.getDefinitionKey(), dto.getBusinessKey(), instanceVariables);
         return Resp.success(null, leaveProcInstService.startProcessInstance(initBO));

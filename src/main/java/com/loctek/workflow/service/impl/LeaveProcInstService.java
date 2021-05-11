@@ -40,11 +40,11 @@ public class LeaveProcInstService extends BaseProcessInstanceService<LeaveInstan
                 (String) variables.get("applierGroup"),
                 (Integer) variables.get("applierLevel"),
                 (Double) variables.get("days"),
-                (List<String>) variables.get("SupervisorCandidateList"),
-                (List<String>) variables.get("ManagerCandidateList"),
-                (List<String>) variables.get("DirectorCandidateList"),
-                (List<String>) variables.get("VicePresidentCandidateList"),
-                (List<String>) variables.get("PresidentCandidateList")
+                (List<String>) variables.get("supervisorCandidateList"),
+                (List<String>) variables.get("managerCandidateList"),
+                (List<String>) variables.get("directorCandidateList"),
+                (List<String>) variables.get("vicePresidentCandidateList"),
+                (List<String>) variables.get("presidentCandidateList")
         );
     }
 

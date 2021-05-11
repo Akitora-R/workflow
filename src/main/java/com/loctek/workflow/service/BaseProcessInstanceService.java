@@ -72,6 +72,11 @@ public abstract class BaseProcessInstanceService<V extends BaseInstanceVariable>
         return processInstance == null ? null : getDTO(processInstance, convertInstanceVariable(getVariablesByInstanceId(processInstance.getProcessInstanceId())));
     }
 
+    public BaseProcessInstanceDTO<V> getHistoricProcessInstanceByInstanceId(String instanceId) {
+        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(instanceId).singleResult();
+        return historicProcessInstance == null ? null : getDTO(historicProcessInstance, convertInstanceVariable(getVariablesByInstanceId(instanceId)));
+    }
+
     /**
      * 以businessKey开始流程
      *
@@ -109,6 +114,18 @@ public abstract class BaseProcessInstanceService<V extends BaseInstanceVariable>
         dto.setDefinitionName(processInstance.getProcessDefinitionName());
         dto.setBusinessKey(processInstance.getBusinessKey());
         dto.setStartTime(processInstance.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        dto.setVariable(variables);
+        return dto;
+    }
+
+    private BaseProcessInstanceDTO<V> getDTO(HistoricProcessInstance historicProcessInstance, V variables) {
+        BaseProcessInstanceDTO<V> dto = new BaseProcessInstanceDTO<>();
+        dto.setId(historicProcessInstance.getId());
+        dto.setName(historicProcessInstance.getName());
+        dto.setDefinitionKey(historicProcessInstance.getProcessDefinitionKey());
+        dto.setDefinitionName(historicProcessInstance.getProcessDefinitionName());
+        dto.setBusinessKey(historicProcessInstance.getBusinessKey());
+        dto.setStartTime(historicProcessInstance.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         dto.setVariable(variables);
         return dto;
     }

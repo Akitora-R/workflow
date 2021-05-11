@@ -2,6 +2,7 @@ package com.loctek.workflow.entity.activiti;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -12,9 +13,10 @@ import java.util.Map;
  */
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public abstract class BaseInstanceVariable {
-    public String applierId;
-    public String applierDepartmentId;
+    protected String applierId;
+    protected String applierDepartmentId;
 
     public abstract Map<String, Object> toMap();
 }
