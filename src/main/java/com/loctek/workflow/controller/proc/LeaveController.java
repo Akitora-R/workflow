@@ -26,15 +26,6 @@ public class LeaveController {
     private final LeaveProcInstService leaveProcInstService;
     private final LeaveTaskService leaveTaskService;
 
-    //FIXME: 2021/4/27 通过接口获取或者开始任务时传入
-    private final static Map<String, List<String>> groupService = Collections.unmodifiableMap(new HashMap<String, List<String>>() {{
-        put("supervisorCandidateList", Arrays.asList("s1", "10110"));
-        put("managerCandidateList", Arrays.asList("m1", "10110"));
-        put("directorCandidateList", Arrays.asList("d1", "10110"));
-        put("vicePresidentCandidateList", Arrays.asList("v1", "10110"));
-        put("presidentCandidateList", Arrays.asList("p1", "10110"));
-    }});
-
     @GetMapping("/proc/def")
     public Resp<?> getInsDef() {
         return Resp.success(null, leaveProcInstService.getProcessDefinition());
@@ -49,11 +40,11 @@ public class LeaveController {
                         dto.getApplierGroup(),
                         dto.getApplierLevel(),
                         dto.getDays(),
-                        groupService.get("supervisorCandidateList"),
-                        groupService.get("managerCandidateList"),
-                        groupService.get("directorCandidateList"),
-                        groupService.get("vicePresidentCandidateList"),
-                        groupService.get("presidentCandidateList"));
+                        dto.getSupervisorCandidateList(),
+                        dto.getManagerCandidateList(),
+                        dto.getDirectorCandidateList(),
+                        dto.getVicePresidentCandidateList(),
+                        dto.getPresidentCandidateList());
         ProcessInstanceInitBO<LeaveInstanceVariable> initBO =
                 new ProcessInstanceInitBO<>(leaveProcInstService.getDefinitionKey(), dto.getBusinessKey(), instanceVariables);
         return Resp.success(null, leaveProcInstService.startProcessInstance(initBO));

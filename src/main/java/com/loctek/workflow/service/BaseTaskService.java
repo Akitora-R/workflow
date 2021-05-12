@@ -2,18 +2,18 @@ package com.loctek.workflow.service;
 
 import cn.hutool.core.util.StrUtil;
 import com.loctek.workflow.constant.AuditStatus;
-import com.loctek.workflow.entity.activiti.*;
-import com.loctek.workflow.entity.activiti.impl.LeaveTaskVariable;
+import com.loctek.workflow.entity.activiti.AuditStatusDTO;
+import com.loctek.workflow.entity.activiti.BaseTaskConclusionDTO;
+import com.loctek.workflow.entity.activiti.BaseTaskDTO;
+import com.loctek.workflow.entity.activiti.BaseTaskVariable;
 import lombok.RequiredArgsConstructor;
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.*;
-import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskInfo;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
 import java.util.HashMap;
@@ -116,16 +116,29 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
         return completeTask(dto);
     }
 
-    public Map<String, AuditStatusDTO> getAuditStatusByBusinessKeyList(List<String> businessKeyList) {
-        return businessKeyList.stream().map(bk -> {
+    public Map<String, ? extends AuditStatusDTO> getAuditStatusByBusinessKeyList(List<String> businessKeyList) {
+        return businessKeyList.stream().collect(Collectors.toMap(bk -> bk, bk -> {
             BaseTaskDTO<V> lastTask = getLastTaskByBusinessKey(bk);
             boolean notSubmitted = lastTask == null;
             AuditStatus status =
                     notSubmitted ? AuditStatus.notSubmitted :
                             !lastTask.getFinished() ? AuditStatus.pending :
                                     lastTask.getApproval() ? AuditStatus.accepted : AuditStatus.rejected;
-            return new AuditStatusDTO(bk, notSubmitted ? null : lastTask.getId(), status, getAuditDescription(status, lastTask));
-        }).collect(Collectors.toMap(AuditStatusDTO::getBusinessKey, dto -> dto));
+            return new AuditStatusDTO(bk,
+                    notSubmitted ? null : lastTask.getId(),
+                    notSubmitted ? null :lastTask.getName(),
+                    status,
+                    notSubmitted ? null : lastTask.getCandidateList(),
+                    notSubmitted ? null : lastTask.getAssignee());
+        }));
+    }
+
+    public Map<String, ? extends BaseTaskDTO<V>> getLastTaskByBusinessKeyList(List<String> businessKeyList) {
+        HashMap<String, BaseTaskDTO<V>> map = new HashMap<>();
+        for (String bk : businessKeyList) {
+            map.put(bk, getLastTaskByBusinessKey(bk));
+        }
+        return map;
     }
 
     public List<String> getTaskIdList(String businessKey, String taskName) {
