@@ -45,7 +45,7 @@ public class ActivitiGlobalEventListener implements ActivitiEventListener, Seria
 
     @Override
     public boolean isFailOnException() {
-        return false;
+        return true;
     }
 
     private String getDefKey(String defId){
