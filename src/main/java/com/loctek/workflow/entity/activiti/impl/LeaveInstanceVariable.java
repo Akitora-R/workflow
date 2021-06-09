@@ -8,14 +8,10 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class LeaveInstanceVariable extends BaseInstanceVariable {
-    private final static List<String> group1 = Arrays.asList(
-            "销售", "市场", "产品研发", "技术", "生产供应链");
-    private final static List<String> group2 = Arrays.asList(
-            "战略运营", "人力资源", "财务", "风控", "综合");
-    private final static List<String> group3 = Collections.singletonList(
-            "操作");
-    private final static List<String> group4 = Collections.singletonList(
-            "管理");
+    private final static List<String> group1 = Arrays.asList("销售族群", "市场族群", "产品研发族群", "技术族群", "生产供应链族群");
+    private final static List<String> group2 = Arrays.asList("战略运营族群", "人力资源族群", "财务族群", "风控族群", "综合族群");
+    private final static List<String> group3 = Collections.singletonList("操作族群");
+    private final static List<String> group4 = Collections.singletonList("管理族群");
 
     private String applierGroup;
     private Integer applierLevel;
