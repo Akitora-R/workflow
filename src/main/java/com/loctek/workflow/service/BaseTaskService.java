@@ -70,6 +70,17 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
         return getDTOListByInstanceList(historicTaskInstances);
     }
 
+    public List<BaseTaskDTO<V>> getTaskListByBusinessKeyAndInstanceId(String businessKey,String instId) {
+        List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery()
+                .processInstanceId(instId)
+                .processInstanceBusinessKey(businessKey).orderByHistoricTaskInstanceStartTime().desc().list();
+        return getDTOListByInstanceList(historicTaskInstances);
+    }
+
+    public String getInstIdByTaskId(String taskId){
+        return historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult().getProcessInstanceId();
+    }
+
     public List<BaseTaskDTO<V>> getTaskListByInstanceId(String instanceId) {
         List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery().processInstanceId(instanceId).list();
         return getDTOListByInstanceList(historicTaskInstances);

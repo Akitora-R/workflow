@@ -101,6 +101,12 @@ public class LeaveController {
         return Resp.success(null, leaveTaskService.getTaskListByBusinessKey(businessKey));
     }
 
+    @GetMapping("/task/bk/{businessKey}/{taskId}")
+    public Resp<List<BaseTaskDTO<LeaveTaskVariable>>> getSingleProcTasksByBusinessKey(@PathVariable String businessKey, @PathVariable String taskId) {
+        String instId = leaveTaskService.getInstIdByTaskId(taskId);
+        return Resp.success(null, leaveTaskService.getTaskListByBusinessKeyAndInstanceId(businessKey,instId));
+    }
+
     @PostMapping("/task/query")
     public Resp<PagedData<BaseTaskDTO<LeaveTaskVariable>>> getTasksByQuery(@RequestParam(defaultValue = "1") Integer pageNo,
                                                                            @Max(100) @RequestParam(defaultValue = "40") Integer pageSize,
