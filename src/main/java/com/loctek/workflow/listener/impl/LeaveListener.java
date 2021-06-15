@@ -3,8 +3,11 @@ package com.loctek.workflow.listener.impl;
 import cn.hutool.core.lang.Assert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.loctek.workflow.entity.activiti.BaseTaskDTO;
+import com.loctek.workflow.entity.activiti.impl.LeaveTaskVariable;
 import com.loctek.workflow.listener.IListener;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
+import com.loctek.workflow.service.impl.LeaveTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -14,11 +17,13 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class LeaveListener implements IListener {
     private final LeaveProcInstService leaveProcInstService;
+    private final LeaveTaskService leaveTaskService;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    public LeaveListener(@Lazy LeaveProcInstService leaveProcInstService, RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public LeaveListener(@Lazy LeaveProcInstService leaveProcInstService,@Lazy LeaveTaskService leaveTaskService, RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.leaveProcInstService = leaveProcInstService;
+        this.leaveTaskService = leaveTaskService;
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
     }
@@ -26,12 +31,19 @@ public class LeaveListener implements IListener {
     @Override
     public void executeOnProcessComplete(String instanceId) {
         String businessKey = leaveProcInstService.getHistoricProcessInstanceByInstanceId(instanceId).getBusinessKey();
-        log.info("执行完成，调用接口写入，bk：{}", businessKey);
-        String body = restTemplate.getForEntity("http://192.168.0.239:18888/salary/api/leaveApi.do?method=applyLeaveToFeiShu&id=" + businessKey, String.class).getBody();
-        try {
-            Assert.isTrue(objectMapper.readTree(body).get("code").asInt(500) == 200);
-        } catch (JsonProcessingException e) {
-            log.error("调用出错了嗯...", e);
+        BaseTaskDTO<LeaveTaskVariable> lastTask = leaveTaskService.getLastTaskByBusinessKey(businessKey);
+        if (lastTask == null) {
+            log.warn("当前流程没有任务！");
+            return;
+        }
+        if (lastTask.getApproval()) {
+            log.info("执行完成且通过，调用接口写入，bk：{}", businessKey);
+            String body = restTemplate.getForEntity("http://192.168.0.239:18888/salary/api/leaveApi.do?method=applyLeaveToFeiShu&id=" + businessKey, String.class).getBody();
+            try {
+                Assert.isTrue(objectMapper.readTree(body).get("code").asInt(500) == 200);
+            } catch (JsonProcessingException e) {
+                log.error("调用出错了嗯...", e);
+            }
         }
     }
 
