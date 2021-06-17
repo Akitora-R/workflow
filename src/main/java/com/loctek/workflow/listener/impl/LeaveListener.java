@@ -9,6 +9,7 @@ import com.loctek.workflow.listener.IListener;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
 import com.loctek.workflow.service.impl.LeaveTaskService;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.TaskService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -18,12 +19,14 @@ import org.springframework.web.client.RestTemplate;
 public class LeaveListener implements IListener {
     private final LeaveProcInstService leaveProcInstService;
     private final LeaveTaskService leaveTaskService;
+    private final TaskService taskService;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    public LeaveListener(@Lazy LeaveProcInstService leaveProcInstService,@Lazy LeaveTaskService leaveTaskService, RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public LeaveListener(@Lazy LeaveProcInstService leaveProcInstService, @Lazy LeaveTaskService leaveTaskService,@Lazy TaskService taskService, RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.leaveProcInstService = leaveProcInstService;
         this.leaveTaskService = leaveTaskService;
+        this.taskService = taskService;
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
     }
@@ -36,7 +39,8 @@ public class LeaveListener implements IListener {
             log.warn("当前流程没有任务！");
             return;
         }
-        if (lastTask.getApproval()) {
+        Boolean approval = taskService.getVariableLocal(lastTask.getId(), "approval", Boolean.class);
+        if (approval) {
             log.info("执行完成且通过，调用接口写入，bk：{}", businessKey);
             String body = restTemplate.getForEntity("http://192.168.0.239:18888/salary/api/leaveApi.do?method=applyLeaveToFeiShu&id=" + businessKey, String.class).getBody();
             try {

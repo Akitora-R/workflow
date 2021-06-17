@@ -3,9 +3,12 @@ package com.loctek.workflow;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loctek.workflow.entity.activiti.BaseProcessInstanceDTO;
+import com.loctek.workflow.entity.activiti.BaseTaskDTO;
 import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
 import com.loctek.workflow.entity.activiti.impl.LeaveInstanceVariable;
+import com.loctek.workflow.entity.activiti.impl.LeaveTaskVariable;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
+import com.loctek.workflow.service.impl.LeaveTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -36,6 +39,8 @@ class SpringTests {
     TaskService taskService;
     @Autowired
     LeaveProcInstService leaveProcInstService;
+    @Autowired
+    LeaveTaskService leaveTaskService;
     @Test
     void contextLoads() {
     }
@@ -108,10 +113,10 @@ class SpringTests {
     }
 
     @Test
-    void getHistoricProcInstDTO(){
-        String id="f171c2a1-b170-11eb-9a94-c4651636fef4";
-        BaseProcessInstanceDTO<LeaveInstanceVariable> dto = leaveProcInstService.getHistoricProcessInstanceByInstanceId(id);
-        printJson(dto);
+    void getHistoricProcInstDTO() throws JsonProcessingException {
+        String id="2c9097127a13f6e1017a14277617000e";
+
+        System.out.println(leaveTaskService.getLastTaskByBusinessKey(id).getApproval());
     }
 
     private void printJson(Object o){

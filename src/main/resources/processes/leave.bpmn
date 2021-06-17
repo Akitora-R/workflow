@@ -41,8 +41,8 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approval}]]></conditionExpression>
     </sequenceFlow>
     <endEvent id="endevent7" name="结束"></endEvent>
-    <userTask id="usertask5" name="副总裁审核" activiti:candidateUsers="${vicePresidentCandidateList}"></userTask>
-    <endEvent id="endevent8" name="副总裁审核未通过"></endEvent>
+    <userTask id="usertask5" name="副总经理审核" activiti:candidateUsers="${vicePresidentCandidateList}"></userTask>
+    <endEvent id="endevent8" name="副总经理审核未通过"></endEvent>
     <sequenceFlow id="flow16" sourceRef="usertask5" targetRef="endevent8">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approval}]]></conditionExpression>
     </sequenceFlow>
@@ -54,13 +54,13 @@
     <sequenceFlow id="flow18" sourceRef="exclusivegateway4" targetRef="endevent9">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${days<=10 || group2.contains(applierGroup)}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask6" name="总裁审核" activiti:candidateUsers="${presidentCandidateList}"></userTask>
+    <userTask id="usertask6" name="总经理审核" activiti:candidateUsers="${presidentCandidateList}"></userTask>
     <sequenceFlow id="flow19" sourceRef="exclusivegateway4" targetRef="usertask6"></sequenceFlow>
     <endEvent id="endevent10" name="结束"></endEvent>
     <sequenceFlow id="flow20" sourceRef="usertask6" targetRef="endevent10">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approval}]]></conditionExpression>
     </sequenceFlow>
-    <endEvent id="endevent11" name="总裁审核未通过"></endEvent>
+    <endEvent id="endevent11" name="总经理审核未通过"></endEvent>
     <sequenceFlow id="flow21" sourceRef="usertask6" targetRef="endevent11">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approval}]]></conditionExpression>
     </sequenceFlow>
@@ -133,9 +133,9 @@
     <sequenceFlow id="flow42" sourceRef="exclusivegateway9" targetRef="endevent21">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${days <= 5}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask12" name="副总裁审核" activiti:candidateUsers="${vicePresidentCandidateList}"></userTask>
+    <userTask id="usertask12" name="副总经理审核" activiti:candidateUsers="${vicePresidentCandidateList}"></userTask>
     <sequenceFlow id="flow43" sourceRef="exclusivegateway9" targetRef="usertask12"></sequenceFlow>
-    <endEvent id="endevent22" name="副总裁审核未通过"></endEvent>
+    <endEvent id="endevent22" name="副总经理审核未通过"></endEvent>
     <sequenceFlow id="flow44" sourceRef="usertask12" targetRef="endevent22">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approval}]]></conditionExpression>
     </sequenceFlow>
@@ -147,7 +147,7 @@
     <sequenceFlow id="flow46" sourceRef="exclusivegateway10" targetRef="endevent23">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${days <= 8}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask13" name="总裁审核" activiti:candidateUsers="${presidentCandidateList}"></userTask>
+    <userTask id="usertask13" name="总经理审核" activiti:candidateUsers="${presidentCandidateList}"></userTask>
     <sequenceFlow id="flow47" sourceRef="exclusivegateway10" targetRef="usertask13"></sequenceFlow>
     <endEvent id="endevent24" name="结束"></endEvent>
     <sequenceFlow id="flow48" sourceRef="usertask13" targetRef="endevent24">
@@ -173,9 +173,9 @@
     <sequenceFlow id="flow53" sourceRef="exclusivegateway11" targetRef="endevent27">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${days <=2}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask15" name="副总裁审核" activiti:candidateUsers="${vicePresidentCandidateList}"></userTask>
+    <userTask id="usertask15" name="副总经理审核" activiti:candidateUsers="${vicePresidentCandidateList}"></userTask>
     <sequenceFlow id="flow54" sourceRef="exclusivegateway11" targetRef="usertask15"></sequenceFlow>
-    <endEvent id="endevent28" name="副总裁审核未通过"></endEvent>
+    <endEvent id="endevent28" name="副总经理审核未通过"></endEvent>
     <sequenceFlow id="flow55" sourceRef="usertask15" targetRef="endevent28">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approval}]]></conditionExpression>
     </sequenceFlow>
@@ -187,9 +187,9 @@
     <sequenceFlow id="flow57" sourceRef="exclusivegateway12" targetRef="endevent29">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${days <= 5}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask16" name="总裁审核" activiti:candidateUsers="${presidentCandidateList}"></userTask>
+    <userTask id="usertask16" name="总经理审核" activiti:candidateUsers="${presidentCandidateList}"></userTask>
     <sequenceFlow id="flow58" sourceRef="exclusivegateway12" targetRef="usertask16"></sequenceFlow>
-    <endEvent id="endevent30" name="总裁审核未通过"></endEvent>
+    <endEvent id="endevent30" name="总经理审核未通过"></endEvent>
     <sequenceFlow id="flow59" sourceRef="usertask16" targetRef="endevent30">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approval}]]></conditionExpression>
     </sequenceFlow>
@@ -197,11 +197,11 @@
     <sequenceFlow id="flow60" sourceRef="usertask16" targetRef="endevent31">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approval}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask17" name="副总裁审核" activiti:candidateUsers="${vicePresidentCandidateList}"></userTask>
+    <userTask id="usertask17" name="副总经理审核" activiti:candidateUsers="${vicePresidentCandidateList}"></userTask>
     <sequenceFlow id="flow61" sourceRef="exclusivegateway7" targetRef="usertask17">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${applierLevel >= 11}]]></conditionExpression>
     </sequenceFlow>
-    <endEvent id="endevent32" name="副总裁审核未通过"></endEvent>
+    <endEvent id="endevent32" name="副总经理审核未通过"></endEvent>
     <sequenceFlow id="flow62" sourceRef="usertask17" targetRef="endevent32">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approval}]]></conditionExpression>
     </sequenceFlow>
@@ -213,13 +213,13 @@
     <sequenceFlow id="flow64" sourceRef="exclusivegateway13" targetRef="endevent33">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${days <= 3}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask18" name="总裁审核" activiti:candidateUsers="${presidentCandidateList}"></userTask>
+    <userTask id="usertask18" name="总经理审核" activiti:candidateUsers="${presidentCandidateList}"></userTask>
     <sequenceFlow id="flow65" sourceRef="exclusivegateway13" targetRef="usertask18"></sequenceFlow>
     <endEvent id="endevent34" name="End"></endEvent>
     <sequenceFlow id="flow66" sourceRef="usertask18" targetRef="endevent34">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approval}]]></conditionExpression>
     </sequenceFlow>
-    <endEvent id="endevent35" name="总裁审核未通过"></endEvent>
+    <endEvent id="endevent35" name="总经理审核未通过"></endEvent>
     <sequenceFlow id="flow67" sourceRef="usertask18" targetRef="endevent35">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approval}]]></conditionExpression>
     </sequenceFlow>
@@ -698,7 +698,7 @@
         <omgdi:waypoint x="376.0" y="39.0"></omgdi:waypoint>
         <omgdi:waypoint x="376.0" y="80.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="376.0" y="39.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="81.0" x="376.0" y="39.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

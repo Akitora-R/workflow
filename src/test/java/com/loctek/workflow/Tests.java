@@ -1,11 +1,11 @@
 package com.loctek.workflow;
 
 import cn.hutool.core.net.url.UrlBuilder;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 
 public class Tests {
@@ -26,5 +26,10 @@ public class Tests {
                 .appendPath("/leave")
                 .appendPath("proc");
         System.out.println(urlBuilder.build());
+    }
+
+    @Test
+    void floor(){
+        System.out.println(new BigDecimal("1.00000000").scale());
     }
 }
