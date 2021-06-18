@@ -43,9 +43,11 @@ public class LeaveListener implements IListener {
         if (approval) {
             log.info("执行完成且通过，调用接口写入，bk：{}", businessKey);
             String body = restTemplate.getForEntity("http://192.168.0.239:18888/salary/api/leaveApi.do?method=applyLeaveToFeiShu&id=" + businessKey, String.class).getBody();
+            log.info("响应:{}",body);
             try {
                 Assert.isTrue(objectMapper.readTree(body).get("code").asInt(500) == 200);
-            } catch (JsonProcessingException e) {
+                log.info("写入完成");
+            } catch (Exception e) {
                 log.error("调用出错了嗯...", e);
             }
         }

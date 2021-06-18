@@ -1,38 +1,39 @@
 package com.loctek.workflow.entity.activiti.impl;
 
-import com.loctek.workflow.entity.activiti.BaseInstanceVariable;
 import com.loctek.workflow.constant.JobGroupList;
-import lombok.*;
+import com.loctek.workflow.entity.activiti.BaseInstanceVariable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class LeaveInstanceVariable extends BaseInstanceVariable {
-
+@NoArgsConstructor
+public class OvertimeInstanceVariable extends BaseInstanceVariable {
     private String applierGroup;
     private Integer applierLevel;
-    private Double days;
     private List<String> supervisorCandidateList;
     private List<String> managerCandidateList;
     private List<String> directorCandidateList;
     private List<String> vicePresidentCandidateList;
     private List<String> presidentCandidateList;
 
-    public LeaveInstanceVariable(String applierId,
-                                 String applierDepartmentId,
-                                 String applierGroup,
-                                 Integer applierLevel,
-                                 Double days,
-                                 List<String> supervisorCandidateList,
-                                 List<String> managerCandidateList,
-                                 List<String> directorCandidateList,
-                                 List<String> vicePresidentCandidateList,
-                                 List<String> presidentCandidateList) {
-        super(applierId,applierDepartmentId);
+    public OvertimeInstanceVariable(String applierId,
+                                    String applierDepartmentId,
+                                    String applierGroup,
+                                    Integer applierLevel,
+                                    List<String> supervisorCandidateList,
+                                    List<String> managerCandidateList,
+                                    List<String> directorCandidateList,
+                                    List<String> vicePresidentCandidateList,
+                                    List<String> presidentCandidateList) {
+        super(applierId, applierDepartmentId);
         this.applierGroup = applierGroup;
         this.applierLevel = applierLevel;
-        this.days = days;
         this.supervisorCandidateList = supervisorCandidateList;
         this.managerCandidateList = managerCandidateList;
         this.directorCandidateList = directorCandidateList;
@@ -43,11 +44,10 @@ public class LeaveInstanceVariable extends BaseInstanceVariable {
     @Override
     public Map<String, Object> toMap() {
         return new HashMap<String, Object>() {{
-            put("applierId", LeaveInstanceVariable.super.applierId);
-            put("applierDepartmentId", LeaveInstanceVariable.super.applierDepartmentId);
+            put("applierId", applierId);
+            put("applierDepartmentId", applierDepartmentId);
             put("applierGroup", applierGroup);
             put("applierLevel", applierLevel);
-            put("days", days);
             put("group1", JobGroupList.group1);
             put("group2", JobGroupList.group2);
             put("group3", JobGroupList.group3);
@@ -58,5 +58,6 @@ public class LeaveInstanceVariable extends BaseInstanceVariable {
             put("vicePresidentCandidateList", vicePresidentCandidateList);
             put("presidentCandidateList", presidentCandidateList);
         }};
+
     }
 }
