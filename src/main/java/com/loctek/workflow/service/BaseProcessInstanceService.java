@@ -1,7 +1,9 @@
 package com.loctek.workflow.service;
 
-import com.loctek.workflow.entity.activiti.*;
-import lombok.Getter;
+import com.loctek.workflow.entity.activiti.BaseInstanceVariable;
+import com.loctek.workflow.entity.activiti.BaseProcessInstanceDTO;
+import com.loctek.workflow.entity.activiti.ProcessDefinitionDTO;
+import com.loctek.workflow.entity.activiti.ProcessInstanceInitBO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiObjectNotFoundException;
@@ -14,7 +16,6 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 
 import java.time.ZoneId;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

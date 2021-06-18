@@ -1,10 +1,13 @@
 package com.loctek.workflow.entity.activiti.impl;
 
-import com.loctek.workflow.entity.activiti.BaseInstanceVariable;
 import com.loctek.workflow.constant.JobGroupList;
-import lombok.*;
+import com.loctek.workflow.entity.activiti.BaseInstanceVariable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

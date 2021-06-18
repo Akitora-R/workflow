@@ -3,7 +3,10 @@ package com.loctek.workflow.controller.proc;
 import com.loctek.workflow.entity.PagedData;
 import com.loctek.workflow.entity.Resp;
 import com.loctek.workflow.entity.activiti.*;
-import com.loctek.workflow.entity.activiti.impl.*;
+import com.loctek.workflow.entity.activiti.impl.LeaveInstanceQueryDTO;
+import com.loctek.workflow.entity.activiti.impl.LeaveInstanceVariable;
+import com.loctek.workflow.entity.activiti.impl.LeaveProcessInstanceInitDTO;
+import com.loctek.workflow.entity.activiti.impl.LeaveTaskVariable;
 import com.loctek.workflow.service.impl.LeaveActService;
 import com.loctek.workflow.service.impl.LeaveProcInstService;
 import com.loctek.workflow.service.impl.LeaveTaskService;
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -110,7 +113,7 @@ public class LeaveController {
     @PostMapping("/task/query")
     public Resp<PagedData<BaseTaskDTO<LeaveTaskVariable>>> getTasksByQuery(@RequestParam(defaultValue = "1") Integer pageNo,
                                                                            @Max(100) @RequestParam(defaultValue = "40") Integer pageSize,
-                                                                           @RequestBody@Validated LeaveTaskQueryDTO queryDTO) {
+                                                                           @RequestBody@Validated BaseTaskQueryDTO queryDTO) {
         return Resp.success(null, leaveTaskService.getTaskListByQuery(pageNo, pageSize, queryDTO));
     }
 

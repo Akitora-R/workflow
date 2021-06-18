@@ -2,10 +2,8 @@ package com.loctek.workflow.service;
 
 import cn.hutool.core.util.StrUtil;
 import com.loctek.workflow.constant.AuditStatus;
-import com.loctek.workflow.entity.activiti.AuditStatusDTO;
-import com.loctek.workflow.entity.activiti.BaseTaskConclusionDTO;
-import com.loctek.workflow.entity.activiti.BaseTaskDTO;
-import com.loctek.workflow.entity.activiti.BaseTaskVariable;
+import com.loctek.workflow.entity.PagedData;
+import com.loctek.workflow.entity.activiti.*;
 import lombok.RequiredArgsConstructor;
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.HistoryService;
@@ -209,5 +207,35 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
                     (String) variables.get("comment"),
                     candidateList);
         }).collect(Collectors.toList());
+    }
+
+    public PagedData<BaseTaskDTO<V>> getTaskListByQuery(Integer pageNo, Integer pageSize, BaseTaskQueryDTO taskQueryDTO) {
+        HistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery();
+        if (taskQueryDTO.getIsFinished() != null) {
+            if (taskQueryDTO.getIsFinished()) {
+                query.finished();
+            } else {
+                query.unfinished();
+            }
+        }
+        if (taskQueryDTO.getPosition() != null) {
+            query.taskName(taskQueryDTO.getPosition().getDesc().concat("审核"));
+        }
+        if (StrUtil.isNotBlank(taskQueryDTO.getApplierId())) {
+            query.taskVariableValueEquals("applierId", taskQueryDTO.getApplierId());
+        }
+        if (StrUtil.isNotBlank(taskQueryDTO.getAuditorId())) {
+            query.or()
+                    .taskCandidateUser(taskQueryDTO.getAuditorId())
+                    .taskAssignee(taskQueryDTO.getAuditorId())
+                    .endOr();
+        }
+        if (StrUtil.isNotBlank(taskQueryDTO.getBusinessKey())) {
+            query.processInstanceBusinessKey(taskQueryDTO.getBusinessKey());
+        }
+        query.orderByTaskCreateTime().desc();
+        long totalCount = query.count();
+        List<BaseTaskDTO<V>> dtoList = getDTOListByInstanceList(query.listPage((pageNo - 1) * pageSize, pageNo * pageSize));
+        return new PagedData<>(pageNo, pageSize, dtoList.size(), totalCount, totalCount > dtoList.size(), dtoList);
     }
 }

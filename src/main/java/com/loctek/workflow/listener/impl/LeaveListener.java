@@ -1,7 +1,6 @@
 package com.loctek.workflow.listener.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loctek.workflow.entity.activiti.BaseTaskDTO;
 import com.loctek.workflow.entity.activiti.impl.LeaveTaskVariable;

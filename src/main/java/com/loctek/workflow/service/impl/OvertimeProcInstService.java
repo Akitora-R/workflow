@@ -1,5 +1,6 @@
 package com.loctek.workflow.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import com.loctek.workflow.entity.activiti.impl.OvertimeInstanceVariable;
 import com.loctek.workflow.service.BaseProcessInstanceService;
 import org.activiti.engine.HistoryService;
@@ -17,7 +18,17 @@ public class OvertimeProcInstService extends BaseProcessInstanceService<Overtime
 
     @Override
     protected OvertimeInstanceVariable convertInstanceVariable(Map<String, Object> variables) {
-        return new OvertimeInstanceVariable();
+        return new OvertimeInstanceVariable(
+                (String) variables.get("applierId"),
+                (String) variables.get("applierDepartmentId"),
+                (String) variables.get("applierGroup"),
+                (Integer) variables.get("applierLevel"),
+                Convert.toList(String.class, variables.get("supervisorCandidateList")),
+                Convert.toList(String.class, variables.get("managerCandidateList")),
+                Convert.toList(String.class, variables.get("directorCandidateList")),
+                Convert.toList(String.class, variables.get("vicePresidentCandidateList")),
+                Convert.toList(String.class, variables.get("presidentCandidateList"))
+        );
     }
 
     @Override
