@@ -3,7 +3,6 @@ package com.loctek.workflow.controller.proc;
 import com.loctek.workflow.entity.PagedData;
 import com.loctek.workflow.entity.Resp;
 import com.loctek.workflow.entity.activiti.*;
-import com.loctek.workflow.entity.activiti.impl.LeaveInstanceVariable;
 import com.loctek.workflow.service.BaseProcessInstanceService;
 import com.loctek.workflow.service.BaseTaskService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Validated

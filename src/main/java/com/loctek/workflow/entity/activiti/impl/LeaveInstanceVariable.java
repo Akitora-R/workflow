@@ -1,17 +1,18 @@
 package com.loctek.workflow.entity.activiti.impl;
 
-import com.loctek.workflow.constant.JobGroupList;
 import com.loctek.workflow.entity.activiti.BaseInstanceVariable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class LeaveInstanceVariable extends BaseInstanceVariable {
+    private static final List<String> group1 = Arrays.asList("销售族群", "市场族群", "产品研发族群", "技术族群", "生产供应链族群");
+    private static final List<String> group2 = Arrays.asList("战略运营族群", "人力资源族群", "财务族群", "风控族群", "综合族群");
+    private static final List<String> group3 = Collections.singletonList("操作族群");
+    private static final List<String> group4 = Collections.singletonList("管理族群");
 
     private String applierGroup;
     private Integer applierLevel;
@@ -51,10 +52,10 @@ public class LeaveInstanceVariable extends BaseInstanceVariable {
             put("applierGroup", applierGroup);
             put("applierLevel", applierLevel);
             put("days", days);
-            put("group1", JobGroupList.group1);
-            put("group2", JobGroupList.group2);
-            put("group3", JobGroupList.group3);
-            put("group4", JobGroupList.group4);
+            put("group1", group1);
+            put("group2", group2);
+            put("group3", group3);
+            put("group4", group4);
             put("supervisorCandidateList", supervisorCandidateList);
             put("managerCandidateList", managerCandidateList);
             put("directorCandidateList", directorCandidateList);

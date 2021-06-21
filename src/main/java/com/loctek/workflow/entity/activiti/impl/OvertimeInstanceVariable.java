@@ -1,19 +1,18 @@
 package com.loctek.workflow.entity.activiti.impl;
 
-import com.loctek.workflow.constant.JobGroupList;
 import com.loctek.workflow.entity.activiti.BaseInstanceVariable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 public class OvertimeInstanceVariable extends BaseInstanceVariable {
+    private static final List<String> operationGroup = Collections.singletonList("操作族群");
+    private static final List<String> manageGroup = Collections.singletonList("管理族群");
     private String applierGroup;
     private Integer applierLevel;
     private List<String> supervisorCandidateList;
@@ -48,16 +47,13 @@ public class OvertimeInstanceVariable extends BaseInstanceVariable {
             put("applierDepartmentId", applierDepartmentId);
             put("applierGroup", applierGroup);
             put("applierLevel", applierLevel);
-            put("group1", JobGroupList.group1);
-            put("group2", JobGroupList.group2);
-            put("group3", JobGroupList.group3);
-            put("group4", JobGroupList.group4);
+            put("operationGroup", operationGroup);
+            put("manageGroup", manageGroup);
             put("supervisorCandidateList", supervisorCandidateList);
             put("managerCandidateList", managerCandidateList);
             put("directorCandidateList", directorCandidateList);
             put("vicePresidentCandidateList", vicePresidentCandidateList);
             put("presidentCandidateList", presidentCandidateList);
         }};
-
     }
 }
