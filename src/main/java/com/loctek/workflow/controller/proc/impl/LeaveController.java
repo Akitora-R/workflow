@@ -1,4 +1,4 @@
-package com.loctek.workflow.controller.proc;
+package com.loctek.workflow.controller.proc.impl;
 
 import com.loctek.workflow.entity.PagedData;
 import com.loctek.workflow.entity.Resp;

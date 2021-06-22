@@ -1,5 +1,6 @@
-package com.loctek.workflow.controller.proc;
+package com.loctek.workflow.controller.proc.impl;
 
+import com.loctek.workflow.controller.proc.BaseProcessController;
 import com.loctek.workflow.entity.activiti.impl.OvertimeInstanceVariable;
 import com.loctek.workflow.entity.activiti.impl.OvertimeProcessInstanceInitDTO;
 import com.loctek.workflow.entity.activiti.impl.OvertimeTaskVariable;
