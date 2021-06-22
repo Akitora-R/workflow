@@ -20,6 +20,8 @@ public class OvertimeInstanceVariable extends BaseInstanceVariable {
     private List<String> directorCandidateList;
     private List<String> vicePresidentCandidateList;
     private List<String> presidentCandidateList;
+    private List<String> hrCommissionerCandidateList;
+    private List<String> hrManagerCandidateList;
 
     public OvertimeInstanceVariable(String applierId,
                                     String applierDepartmentId,
@@ -29,7 +31,10 @@ public class OvertimeInstanceVariable extends BaseInstanceVariable {
                                     List<String> managerCandidateList,
                                     List<String> directorCandidateList,
                                     List<String> vicePresidentCandidateList,
-                                    List<String> presidentCandidateList) {
+                                    List<String> presidentCandidateList,
+                                    List<String> hrCommissionerCandidateList,
+                                    List<String> hrManagerCandidateList
+                                    ) {
         super(applierId, applierDepartmentId);
         this.applierGroup = applierGroup;
         this.applierLevel = applierLevel;
@@ -38,6 +43,8 @@ public class OvertimeInstanceVariable extends BaseInstanceVariable {
         this.directorCandidateList = directorCandidateList;
         this.vicePresidentCandidateList = vicePresidentCandidateList;
         this.presidentCandidateList = presidentCandidateList;
+        this.hrCommissionerCandidateList = hrCommissionerCandidateList;
+        this.hrManagerCandidateList = hrManagerCandidateList;
     }
 
     @Override
@@ -54,6 +61,8 @@ public class OvertimeInstanceVariable extends BaseInstanceVariable {
             put("directorCandidateList", directorCandidateList);
             put("vicePresidentCandidateList", vicePresidentCandidateList);
             put("presidentCandidateList", presidentCandidateList);
+            put("hrCommissionerCandidateList", hrCommissionerCandidateList);
+            put("hrManagerCandidateList", hrManagerCandidateList);
         }};
     }
 }

@@ -11,4 +11,9 @@ public class OvertimeTaskService extends BaseTaskService<OvertimeTaskVariable> {
     public OvertimeTaskService(HistoryService historyService, TaskService taskService) {
         super(historyService, taskService);
     }
+
+    @Override
+    public String getDefinitionKey() {
+        return "overtime";
+    }
 }

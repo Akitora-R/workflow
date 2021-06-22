@@ -27,7 +27,9 @@ public class OvertimeProcInstService extends BaseProcessInstanceService<Overtime
                 Convert.toList(String.class, variables.get("managerCandidateList")),
                 Convert.toList(String.class, variables.get("directorCandidateList")),
                 Convert.toList(String.class, variables.get("vicePresidentCandidateList")),
-                Convert.toList(String.class, variables.get("presidentCandidateList"))
+                Convert.toList(String.class, variables.get("presidentCandidateList")),
+                Convert.toList(String.class, variables.get("hrCommissionerCandidateList")),
+                Convert.toList(String.class, variables.get("hrManagerCandidateList"))
         );
     }
 

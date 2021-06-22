@@ -18,6 +18,7 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.task.Task;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +47,16 @@ class SpringTests {
     }
 
     @Test
-    void test1(){
+    void t1(){
+        Task t = taskService.createTaskQuery()
+                .taskName("经理审核")
+                .processInstanceBusinessKey("2c9097127a2d02a4017a2d0cde860002")
+                .singleResult();
+        System.out.println(t);
+    }
+
+    @Test
+    void deployment(){
         Deployment deploy = repositoryService.createDeployment()
                 .addClasspathResource("processes/leave.bpmn")
                 .addClasspathResource("processes/leave.png")

@@ -68,14 +68,14 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
         return getDTOListByInstanceList(historicTaskInstances);
     }
 
-    public List<BaseTaskDTO<V>> getTaskListByBusinessKeyAndInstanceId(String businessKey,String instId) {
+    public List<BaseTaskDTO<V>> getTaskListByBusinessKeyAndInstanceId(String businessKey, String instId) {
         List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery()
                 .processInstanceId(instId)
                 .processInstanceBusinessKey(businessKey).orderByHistoricTaskInstanceStartTime().desc().list();
         return getDTOListByInstanceList(historicTaskInstances);
     }
 
-    public String getInstIdByTaskId(String taskId){
+    public String getInstIdByTaskId(String taskId) {
         return historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult().getProcessInstanceId();
     }
 
@@ -128,14 +128,14 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
     public Map<String, ? extends AuditStatusDTO> getAuditStatusByBusinessKeyList(List<String> businessKeyList) {
         return businessKeyList.stream().collect(Collectors.toMap(bk -> bk, bk -> {
             BaseTaskDTO<V> lastTask = getLastTaskByBusinessKey(bk);
-            boolean notSubmitted = lastTask == null;
+            boolean notSubmitted = lastTask == null || lastTask.getApproval() == null && lastTask.getFinished();
             AuditStatus status =
                     notSubmitted ? AuditStatus.notSubmitted :
                             !lastTask.getFinished() ? AuditStatus.pending :
                                     lastTask.getApproval() ? AuditStatus.accepted : AuditStatus.rejected;
             return new AuditStatusDTO(bk,
                     notSubmitted ? null : lastTask.getId(),
-                    notSubmitted ? null :lastTask.getName(),
+                    notSubmitted ? null : lastTask.getName(),
                     status,
                     notSubmitted ? null : lastTask.getCandidateList(),
                     notSubmitted ? null : lastTask.getAssignee());
@@ -211,6 +211,7 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
 
     public PagedData<BaseTaskDTO<V>> getTaskListByQuery(Integer pageNo, Integer pageSize, BaseTaskQueryDTO taskQueryDTO) {
         HistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery();
+        query.processDefinitionKey(getDefinitionKey());
         if (taskQueryDTO.getIsFinished() != null) {
             if (taskQueryDTO.getIsFinished()) {
                 query.finished();
@@ -238,4 +239,6 @@ public abstract class BaseTaskService<V extends BaseTaskVariable> {
         List<BaseTaskDTO<V>> dtoList = getDTOListByInstanceList(query.listPage((pageNo - 1) * pageSize, pageNo * pageSize));
         return new PagedData<>(pageNo, pageSize, dtoList.size(), totalCount, totalCount > dtoList.size(), dtoList);
     }
+
+    public abstract String getDefinitionKey();
 }

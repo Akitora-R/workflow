@@ -36,6 +36,11 @@ public abstract class BaseProcessController<
 
     protected abstract IV getVariablesByInitDTO(ID dto);
 
+    @GetMapping("/proc/ins/all")
+    public Resp<?> getActiveInstList() {
+        return Resp.success(null, instService.getActiveProcessInstanceList());
+    }
+
     @DeleteMapping("/proc/ins/bk/{bk}")
     public ResponseEntity<Resp<?>> delInsByBk(@PathVariable String bk, @RequestParam(required = false) String reason) {
         BaseProcessInstanceDTO<?> instance = instService.getProcessInstanceByBusinessKey(bk);

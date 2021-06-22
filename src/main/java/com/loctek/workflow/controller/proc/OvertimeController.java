@@ -27,7 +27,9 @@ public class OvertimeController extends BaseProcessController<OvertimeTaskVariab
                 dto.getManagerCandidateList(),
                 dto.getDirectorCandidateList(),
                 dto.getVicePresidentCandidateList(),
-                dto.getPresidentCandidateList()
+                dto.getPresidentCandidateList(),
+                dto.getHrCommissionerCandidateList(),
+                dto.getHrManagerCandidateList()
         );
     }
 }

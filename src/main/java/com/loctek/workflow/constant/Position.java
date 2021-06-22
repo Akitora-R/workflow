@@ -6,6 +6,8 @@ public enum Position {
     director("总监"),
     vicePresident("副总裁"),
     president("总裁"),
+    hrCommissioner("人事专员"),
+    hrManager("人事经理"),
     ;
 
     private final String desc;

@@ -20,4 +20,6 @@ public class OvertimeProcessInstanceInitDTO extends BaseProcessInstanceInitDTO {
     List<String> directorCandidateList;
     List<String> vicePresidentCandidateList;
     List<String> presidentCandidateList;
+    List<String> hrCommissionerCandidateList;
+    List<String> hrManagerCandidateList;
 }
