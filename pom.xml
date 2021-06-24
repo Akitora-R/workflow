@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.loctek</groupId>
     <artifactId>workflow</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>workflow</name>
-    <description>Demo project for Spring Boot</description>
+    <description>activiti workflow</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>

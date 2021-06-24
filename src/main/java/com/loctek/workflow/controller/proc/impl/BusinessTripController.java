@@ -6,9 +6,11 @@ import com.loctek.workflow.entity.activiti.impl.BusinessTripProcessInstanceInitD
 import com.loctek.workflow.entity.activiti.impl.BusinessTripTaskVariable;
 import com.loctek.workflow.service.impl.BusinessTripProcInstService;
 import com.loctek.workflow.service.impl.BusinessTripTaskService;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/businessTrip")
+@RestController
+@RequestMapping("/businessTrip")
 public class BusinessTripController extends BaseProcessController<
         BusinessTripTaskVariable,
         BusinessTripInstanceVariable,

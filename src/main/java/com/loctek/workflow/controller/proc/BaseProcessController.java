@@ -28,7 +28,7 @@ public abstract class BaseProcessController<
     protected final IS instService;
 
     @PostMapping("/proc/start")
-    public Resp<BaseProcessInstanceDTO<?>> startProcInsByBusinessKey(@RequestBody @Validated ID dto){
+    public Resp<BaseProcessInstanceDTO<?>> startProcInsByBusinessKey(@RequestBody @Validated ID dto) {
         ProcessInstanceInitBO<IV> initBO =
                 new ProcessInstanceInitBO<>(instService.getDefinitionKey(), dto.getBusinessKey(), getVariablesByInitDTO(dto));
         return Resp.success(null, instService.startProcessInstance(initBO));
@@ -62,7 +62,7 @@ public abstract class BaseProcessController<
     public ResponseEntity<Resp<?>> completeTaskByName(@RequestBody @Validated BaseTaskConclusionDTO<TV> dto,
                                                       @RequestParam @NotBlank String name,
                                                       @RequestParam @NotBlank String businessKey) {
-        return taskService.completeTaskByName(dto,name,businessKey) ?
+        return taskService.completeTaskByName(dto, name, businessKey) ?
                 new ResponseEntity<>(Resp.success(null, null), HttpStatus.OK) :
                 new ResponseEntity<>(Resp.fail("已完成或ID不正确", null), HttpStatus.NOT_FOUND);
     }
@@ -75,13 +75,13 @@ public abstract class BaseProcessController<
     @GetMapping("/task/bk/{businessKey}/{taskId}")
     public Resp<List<BaseTaskDTO<TV>>> getSingleProcTasksByBusinessKey(@PathVariable String businessKey, @PathVariable String taskId) {
         String instId = taskService.getInstIdByTaskId(taskId);
-        return Resp.success(null, taskService.getTaskListByBusinessKeyAndInstanceId(businessKey,instId));
+        return Resp.success(null, taskService.getTaskListByBusinessKeyAndInstanceId(businessKey, instId));
     }
 
     @PostMapping("/task/query")
     public Resp<PagedData<BaseTaskDTO<TV>>> getTasksByQuery(@RequestParam(defaultValue = "1") Integer pageNo,
-                                                                           @Max(100) @RequestParam(defaultValue = "40") Integer pageSize,
-                                                                           @RequestBody@Validated BaseTaskQueryDTO queryDTO) {
+                                                            @Max(100) @RequestParam(defaultValue = "40") Integer pageSize,
+                                                            @RequestBody @Validated BaseTaskQueryDTO queryDTO) {
         return Resp.success(null, taskService.getTaskListByQuery(pageNo, pageSize, queryDTO));
     }
 

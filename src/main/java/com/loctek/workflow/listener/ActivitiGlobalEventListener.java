@@ -1,6 +1,5 @@
 package com.loctek.workflow.listener;
 
-import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
@@ -16,14 +15,11 @@ import java.util.Map;
 @Component
 public class ActivitiGlobalEventListener implements ActivitiEventListener, Serializable {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(ActivitiGlobalEventListener.class);
-    private final HistoryService historyService;
     private final RepositoryService repositoryService;
     private final Map<String, ? extends IListener> listenerMap;
 
-    public ActivitiGlobalEventListener(@Lazy HistoryService historyService,
-                                       @Lazy RepositoryService repositoryService,
+    public ActivitiGlobalEventListener(@Lazy RepositoryService repositoryService,
                                        Map<String, ? extends IListener> listenerMap) {
-        this.historyService = historyService;
         this.repositoryService = repositoryService;
         this.listenerMap = listenerMap;
     }
